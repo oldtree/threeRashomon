@@ -5,8 +5,11 @@ import (
 
 	"sync"
 
+	"net/http"
+
 	"github.com/oldtree/threeRashomon/pkg/backend"
 	"github.com/oldtree/threeRashomon/pkg/balancer"
+	"github.com/oldtree/threeRashomon/pkg/plugin"
 )
 
 const (
@@ -24,6 +27,8 @@ type ServiceGate struct {
 
 	ProtactServiceBalance sync.RWMutex
 	ServiceBalanceJudge   balancer.Balancer
+
+	PluginList []plugin.Plugin
 }
 
 func NewServiceGate(serivceName string, bla balancer.Balancer, backends []backend.Backend) *ServiceGate {
@@ -59,4 +64,8 @@ func (service *ServiceGate) ModifyBalance(bla balancer.Balancer) error {
 	defer service.ProtactServiceBalance.Unlock()
 	service.ServiceBalanceJudge = bla
 	return nil
+}
+
+func (service *ServiceGate) handle(request *http.Request, response http.ResponseWriter) {
+
 }
